@@ -41,7 +41,7 @@ while IFS=$'\t' read -r file_name region province wmit_url igm_url igm_date ; do
     fi
     
     # ${var,,} makes the value lowercase, used for case insensitive comparison
-    if [[ -n "$AREA_NAME" && "${province,,}" != "${AREA_NAME,,}" && "${region,,}" != "${AREA_NAME,,}" ]]; then
+    if [[ -n "$AREA_NAME" && "${province,,}" != "${AREA_NAME,,}" && "${region,,}" != "${AREA_NAME,,}" && "${file_name:0:2}" != "${AREA_NAME^^}" ]]; then
         #echo "===> $region - $province: SKIPPED"
         continue
     fi
