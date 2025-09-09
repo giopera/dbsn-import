@@ -15,7 +15,7 @@ Main scripts:
    * `<gdal_layer>` must be one of the layers in https://wiki.openstreetmap.org/wiki/Italy/DBSN/Mapping
    * `<gdal_filter>` should have the format `"parameter = 'value'"`, you can use `""` for no filter
    * `<area_name>` can be the name of a region or a province
-3. [merge.sh](./merge.sh): Merge the filtered files (one fgb / geojson / parquet / mbtiles file)
+3. [merge.sh](./merge.sh): Merge the filtered files (one fgb / geojson / parquet / mbtiles / pmtiles file)
    * `./merge.sh <out_name> [<format>]`
    * `<out_name>` should be the same used previously for filter.sh
    * `<format>` can be `geojson`, `parquet` or `mbtiles`

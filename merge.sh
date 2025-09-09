@@ -43,13 +43,13 @@ if [[ "$FORMAT" == "fgb" ]]; then
     echo "=====> Conversion in $FGB_FILE_PATH completed"
 fi
 
-if [[ "$FORMAT" == "mbtiles" ]]; then
+if [[ "$FORMAT" == "mbtiles" || "$FORMAT" == "pmtiles" ]]; then
     if which tippecanoe ; then
-        MBTILES_FILE_PATH="./data/$OUT_NAME.mbtiles"
-        echo "=====> Converting '$TEMP_DIR_PATH' in $MBTILES_FILE_PATH"
+        TILES_FILE_PATH="./data/$OUT_NAME.$FORMAT"
+        echo "=====> Converting '$TEMP_DIR_PATH' in $TILES_FILE_PATH"
         # https://github.com/felt/tippecanoe#try-this-first
-        tippecanoe -zg -o "$MBTILES_FILE_PATH" -l "$OUT_NAME" --drop-densest-as-needed "$TEMP_DIR_PATH"/*.geojson
-        echo "=====> Conversion in $PARQUET_FILE_PATH completed"
+        tippecanoe -zg -o "$TILES_FILE_PATH" -l "$OUT_NAME" --drop-densest-as-needed "$TEMP_DIR_PATH"/*.fgb
+        echo "=====> Conversion in $TILES_FILE_PATH completed"
     else
         echo "=====> Tippecanoe not found, install it with the instructions in https://github.com/felt/tippecanoe"
         exit 1

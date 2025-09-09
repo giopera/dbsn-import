@@ -2,6 +2,9 @@
 *.geojson
 *.parquet
 *.mbtiles
+*.mbtiles-journal
+*.pmtiles
+*.pmtiles-journal
 *.pbf
 zip/
 unzipped/
