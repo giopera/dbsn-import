@@ -15,11 +15,14 @@ Main scripts:
    * `<gdal_layer>` must be one of the layers in https://wiki.openstreetmap.org/wiki/Italy/DBSN/Mapping
    * `<gdal_filter>` should have the format `"parameter = 'value'"`, you can use `""` for no filter
    * `<area_name>` can be the name of a region or a province
-3. [merge.sh](./merge.sh): Merge the filtered files (one geojson / parquet / mbtiles file)
+3. [merge.sh](./merge.sh): Merge the filtered files (one fgb / geojson / parquet / mbtiles file)
    * `./merge.sh <out_name> [<format>]`
    * `<out_name>` should be the same used previously for filter.sh
    * `<format>` can be `geojson`, `parquet` or `mbtiles`
 4. [townhalls_dbsn.ipynb](./notebooks/townhalls_dbsn.ipynb): find missing townhalls, execute it only after creating townhalls.geojson with:
-    1. `./download.sh`
-    2. `./filter.sh townhalls edifc "edifc_uso = '0201'"`
-    3. `./merge.sh townhalls geojson`
+   1. `./download.sh`
+   2. `./filter.sh townhalls edifc "edifc_uso = '0201'"`
+   3. `./merge.sh townhalls geojson`
+5. [scril_filter.sh](./scril_filter.sh): Filter all the elements of a certain type based on their survey scale
+   * `./filter.sh <out_name> <gdal_layer> [<area_name>]`
+   * `<out_name>`, `<gdal_layer>` and `<area_name>` have the same meaning of filter.sh
