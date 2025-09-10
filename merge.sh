@@ -48,7 +48,7 @@ if [[ "$FORMAT" == "mbtiles" || "$FORMAT" == "pmtiles" ]]; then
         TILES_FILE_PATH="./data/$OUT_NAME.$FORMAT"
         echo "=====> Converting '$TEMP_DIR_PATH' in $TILES_FILE_PATH"
         # https://github.com/felt/tippecanoe#try-this-first
-        tippecanoe -zg -o "$TILES_FILE_PATH" -l "$OUT_NAME" --drop-densest-as-needed "$TEMP_DIR_PATH"/*.fgb
+        tippecanoe -Z7 -zg -o "$TILES_FILE_PATH" -l "$OUT_NAME" --drop-densest-as-needed -x classid -x shape_Length "$TEMP_DIR_PATH"/*.fgb
         echo "=====> Conversion in $TILES_FILE_PATH completed"
     else
         echo "=====> Tippecanoe not found, install it with the instructions in https://github.com/felt/tippecanoe"

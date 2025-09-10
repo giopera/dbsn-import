@@ -39,7 +39,7 @@
         const map = new maplibregl.Map({
             container: 'map', // container id
             hash: true,
-            maxBounds: [[6, 36], [18, 48]],
+            maxBounds: [[4, 34], [20, 50]],
             style: {
                 version: 8,
                 sources: {
@@ -51,9 +51,13 @@
                         tileSize: 256,
                         attribution: '© OpenStreetMap contributors'
                     },
-                    "dbsn": {
+                    "tr_str_no_osm": {
                         "type": "vector",
                         "url": "pmtiles://./tr_str_no_osm.pmtiles",
+                    },
+                    "el_vms_no_osm": {
+                        "type": "vector",
+                        "url": "pmtiles://./el_vms_no_osm.pmtiles",
                     }
                 },
                 layers: [
@@ -65,10 +69,19 @@
                         maxzoom: 19
                     },
                     {
-                        "id": "places",
+                        "id": "tr_str_no_osm",
                         "type": "line",
-                        "source": "dbsn",
+                        "source": "tr_str_no_osm",
                         "source-layer": "tr_str_no_osm",
+                        "paint": {
+                            'line-width': 3   // Valore in pixel
+                        }
+                    },
+                    {
+                        "id": "el_vms_no_osm",
+                        "type": "line",
+                        "source": "el_vms_no_osm",
+                        "source-layer": "el_vms_no_osm",
                         "paint": {
                             'line-width': 3   // Valore in pixel
                         }
@@ -79,11 +92,13 @@
             zoom: 6, // starting zoom
         });
         map.on('load', () => {
+            const onClick = (e) => {
+                let coordinates = e.features[0].geometry.coordinates;
+                while(coordinates.length != 2)
+                    coordinates = coordinates[0];
+                coordinates = coordinates.slice()
 
-            // When a click event occurs on a feature in the places layer, open a popup at the
-            // location of the feature, with description HTML from its properties.
-            map.on('click', 'places', (e) => {
-                const coordinates = e.features[0].geometry.coordinates[0].slice();
+
                 const description = '<table><thead><tr><th>Key</th><th>Value</th></tr></thead><tbody>' + Object.keys(
                     e.features[0].properties
                 ).map(
@@ -102,17 +117,20 @@
                     .setLngLat(coordinates)
                     .setHTML(description)
                     .addTo(map);
-            });
+            };
+
+            // When a click event occurs on a feature in the places layer, open a popup at the
+            // location of the feature, with description HTML from its properties.
+            map.on('click', 'tr_str_no_osm', onClick);
+            map.on('click', 'el_vms_no_osm', onClick);
 
             // Change the cursor to a pointer when the mouse is over the places layer.
-            map.on('mouseenter', 'places', () => {
-                map.getCanvas().style.cursor = 'pointer';
-            });
+            map.on('mouseenter', 'tr_str_no_osm', () => { map.getCanvas().style.cursor = 'pointer'; });
+            map.on('mouseenter', 'el_vms_no_osm', () => { map.getCanvas().style.cursor = 'pointer'; });
 
             // Change it back to a pointer when it leaves.
-            map.on('mouseleave', 'places', () => {
-                map.getCanvas().style.cursor = '';
-            });
+            map.on('mouseleave', 'tr_str_no_osm', () => { map.getCanvas().style.cursor = ''; });
+            map.on('mouseleave', 'el_vms_no_osm', () => { map.getCanvas().style.cursor = ''; });
         });
     </script>
 </body>
