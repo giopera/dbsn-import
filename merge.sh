@@ -44,8 +44,10 @@ if [[ "$FORMAT" == "fgb" ]]; then
 fi
 
 if [[ "$FORMAT" == "mbtiles" || "$FORMAT" == "pmtiles" ]]; then
-    if which tippecanoe ; then
-        TILES_FILE_PATH="./data/$OUT_NAME.$FORMAT"
+    TILES_FILE_PATH="./data/$OUT_NAME.$FORMAT"
+    if [ -f "$TILES_FILE_PATH" ]; then
+        echo "=====> Already merged in '$TILES_FILE_PATH'"
+    elif which tippecanoe ; then
         echo "=====> Converting '$TEMP_DIR_PATH' in $TILES_FILE_PATH"
         # https://github.com/felt/tippecanoe#try-this-first
         tippecanoe -Z7 -zg -o "$TILES_FILE_PATH" -l "$OUT_NAME" --drop-densest-as-needed -x classid -x shape_Length "$TEMP_DIR_PATH"/*.fgb

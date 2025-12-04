@@ -15,6 +15,9 @@ fi
 # The list of available layers can be obtained by running ogrinfo on the gdb folder for any province
 # Examples of usage:
 # ./filter.sh buildings edifc
+# ./filter.sh buildings comune
+# ./filter.sh buildings provin
+# ./filter.sh buildings region
 # ./filter.sh townhalls edifc "edifc_uso = '0201'"
 # ./filter.sh police_buildings edifc "edifc_uso = '0306'"
 # ./filter.sh hospital_buildings edifc "edifc_uso = '030102'"
@@ -59,13 +62,13 @@ while IFS=$'\t' read -r region province file_name wmit_url igm_url igm_date late
     if [ -e "$unzipped_dir_path" ]; then
         echo "===> $region/$province/$igm_date: Already extracted in '$unzipped_dir_path'"
     else
-        echo "===> Extraction of $province_zip_path in $unzipped_dir_path"
+        echo "===> Extraction of '$province_zip_path' in '$unzipped_dir_path'..."
         unzip "$province_zip_path" -d "$unzipped_dir_path"
-        echo "===> Extraction in $unzipped_dir_path completed"
+        echo "===> Extraction in '$unzipped_dir_path' completed"
     fi
 
     gdb_dir_path="$(find "$unzipped_dir_path" -maxdepth 2 -type d -name '*.gdb')"
-    echo "===> Filtering of '$gdb_dir_path' in '$province_file_path'"
+    echo "===> Filtering of '$gdb_dir_path' in '$province_file_path'..."
     if [[ -z "$GDAL_FILTER" ]]; then
         ogr2ogr -f "$OUT_DRIVER" -t_srs 'EPSG:4326' -nln "$OUT_NAME" -skipfailures "$province_file_path" "$gdb_dir_path" "$GDAL_LAYER" \
         && echo "===> $region/$province/$igm_date: Filtering COMPLETED" \
