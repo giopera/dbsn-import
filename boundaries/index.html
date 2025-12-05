@@ -54,6 +54,10 @@
                     "comune_no_osm": {
                         "type": "vector",
                         "url": "pmtiles://./comune_no_osm.pmtiles",
+                    },
+                    "acq_ter_no_osm": {
+                        "type": "vector",
+                        "url": "pmtiles://./acq_ter_no_osm.pmtiles",
                     }
                 },
                 layers: [
@@ -71,7 +75,17 @@
                         "source-layer": "comune_no_osm",
                         "paint": {
                             'line-color': 'black',
-                            'line-width': 3   // Valore in pixel
+                            'line-width': 4   // https://maplibre.org/maplibre-gl-js/docs/examples/style-lines-with-a-data-driven-property/
+                        }
+                    },
+                    {
+                        "id": "acq_ter_no_osm",
+                        "type": "line",
+                        "source": "acq_ter_no_osm",
+                        "source-layer": "acq_ter_no_osm",
+                        "paint": {
+                            'line-color': 'blue',
+                            'line-width': 4   // https://maplibre.org/maplibre-gl-js/docs/examples/style-lines-with-a-data-driven-property/
                         }
                     },
                 ]
@@ -81,24 +95,24 @@
         });
         map.on('load', () => {
             const onClick = (e) => {
-                let coordinates = e.features[0].geometry.coordinates;
-                while(coordinates.length != 2)
+                /*let coordinates = e.features[0].geometry.coordinates;
+                while(Array.isArray(coordinates[0]))
                     coordinates = coordinates[0];
                 coordinates = coordinates.slice()
-
-
-                const description = '<table><thead><tr><th>Key</th><th>Value</th></tr></thead><tbody>' + Object.keys(
-                    e.features[0].properties
-                ).map(
-                    key => `<tr><td>${key}</td><td>${e.features[0].properties[key]}</td></tr>`
-                ) + '</tbody></table>';
 
                 // Ensure that if the map is zoomed out such that multiple
                 // copies of the feature are visible, the popup appears
                 // over the copy being pointed to.
                 while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
                     coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-                }
+                }*/
+                const coordinates = e.lngLat;
+
+                const description = '<table><thead><tr><th>Key</th><th>Value</th></tr></thead><tbody>' + Object.keys(
+                    e.features[0].properties
+                ).map(
+                    key => `<tr><td>${key}</td><td>${e.features[0].properties[key]}</td></tr>`
+                ) + '</tbody></table>';
 
                 console.debug("Opening popup", { feature: e.features[0], coordinates, lngLat: e.lngLat });
                 new maplibregl.Popup()
@@ -110,12 +124,15 @@
             // When a click event occurs on a feature in the places layer, open a popup at the
             // location of the feature, with description HTML from its properties.
             map.on('click', 'comune_no_osm', onClick);
+            map.on('click', 'acq_ter_no_osm', onClick);
 
             // Change the cursor to a pointer when the mouse is over the places layer.
             map.on('mouseenter', 'comune_no_osm', () => { map.getCanvas().style.cursor = 'pointer'; });
+            map.on('mouseenter', 'acq_ter_no_osm', () => { map.getCanvas().style.cursor = 'pointer'; });
 
             // Change it back to a pointer when it leaves.
             map.on('mouseleave', 'comune_no_osm', () => { map.getCanvas().style.cursor = ''; });
+            map.on('mouseleave', 'acq_ter_no_osm', () => { map.getCanvas().style.cursor = ''; });
         });
     </script>
 </body>

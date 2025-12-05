@@ -75,7 +75,7 @@
                         "source-layer": "tr_str_no_osm",
                         "paint": {
                             'line-color': 'black',
-                            'line-width': 3   // https://maplibre.org/maplibre-gl-js/docs/examples/style-lines-with-a-data-driven-property/
+                            'line-width': 4   // https://maplibre.org/maplibre-gl-js/docs/examples/style-lines-with-a-data-driven-property/
                         }
                     },
                     {
@@ -85,7 +85,7 @@
                         "source-layer": "el_vms_no_osm",
                         "paint": {
                             'line-color': 'blue',
-                            'line-width': 3   // https://maplibre.org/maplibre-gl-js/docs/examples/style-lines-with-a-data-driven-property/
+                            'line-width': 4   // https://maplibre.org/maplibre-gl-js/docs/examples/style-lines-with-a-data-driven-property/
                         }
                     },
                 ]
@@ -95,24 +95,24 @@
         });
         map.on('load', () => {
             const onClick = (e) => {
-                let coordinates = e.features[0].geometry.coordinates;
-                while(coordinates.length != 2)
+                /*let coordinates = e.features[0].geometry.coordinates;
+                while(Array.isArray(coordinates[0]))
                     coordinates = coordinates[0];
                 coordinates = coordinates.slice()
-
-
-                const description = '<table><thead><tr><th>Key</th><th>Value</th></tr></thead><tbody>' + Object.keys(
-                    e.features[0].properties
-                ).map(
-                    key => `<tr><td>${key}</td><td>${e.features[0].properties[key]}</td></tr>`
-                ) + '</tbody></table>';
 
                 // Ensure that if the map is zoomed out such that multiple
                 // copies of the feature are visible, the popup appears
                 // over the copy being pointed to.
                 while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
                     coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-                }
+                }*/
+                const coordinates = e.lngLat;
+
+                const description = '<table><thead><tr><th>Key</th><th>Value</th></tr></thead><tbody>' + Object.keys(
+                    e.features[0].properties
+                ).map(
+                    key => `<tr><td>${key}</td><td>${e.features[0].properties[key]}</td></tr>`
+                ) + '</tbody></table>';
 
                 console.debug("Opening popup", { feature: e.features[0], coordinates, lngLat: e.lngLat });
                 new maplibregl.Popup()

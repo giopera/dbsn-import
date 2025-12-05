@@ -14,7 +14,8 @@ GEOJSON_FILE_PATH="./data/$OUT_NAME.geojson"
 
 mkdir -p "./data"
 
-if [[ "$FORMAT" == "geojson" || "$FORMAT" == "parquet" ]]; then
+# fgb and parquet do not support --append so they must be first merged in geojson
+if [[ "$FORMAT" == "geojson" ||  "$FORMAT" == "fgb" || "$FORMAT" == "parquet" ]]; then
     if [ -f "$GEOJSON_FILE_PATH" ]; then
         echo "=====> Already merged in '$GEOJSON_FILE_PATH'"
     elif which ogr2ogr ; then
@@ -31,16 +32,24 @@ fi
 
 if [[ "$FORMAT" == "parquet" ]]; then
     PARQUET_FILE_PATH="./data/$OUT_NAME.parquet"
-    echo "=====> Converting $GEOJSON_FILE_PATH in $PARQUET_FILE_PATH"
-    ogr2ogr -f 'Parquet' "$PARQUET_FILE_PATH" "$GEOJSON_FILE_PATH" # Does not support --append
-    echo "=====> Conversion in $PARQUET_FILE_PATH completed"
+    if [ -f "$PARQUET_FILE_PATH" ]; then
+        echo "=====> Already merged in '$PARQUET_FILE_PATH'"
+    else
+        echo "=====> Converting $GEOJSON_FILE_PATH in $PARQUET_FILE_PATH"
+        ogr2ogr -f 'Parquet' "$PARQUET_FILE_PATH" "$GEOJSON_FILE_PATH"
+        echo "=====> Conversion in $PARQUET_FILE_PATH completed"
+    fi
 fi
 
 if [[ "$FORMAT" == "fgb" ]]; then
     FGB_FILE_PATH="./data/$OUT_NAME.fgb"
-    echo "=====> Converting $GEOJSON_FILE_PATH in $FGB_FILE_PATH"
-    ogr2ogr -f 'FlatGeoBuf' "$FGB_FILE_PATH" "$GEOJSON_FILE_PATH" # Does not support --append
-    echo "=====> Conversion in $FGB_FILE_PATH completed"
+    if [ -f "$FGB_FILE_PATH" ]; then
+        echo "=====> Already merged in '$FGB_FILE_PATH'"
+    else
+        echo "=====> Converting $GEOJSON_FILE_PATH in $FGB_FILE_PATH"
+        ogr2ogr -f 'FlatGeoBuf' "$FGB_FILE_PATH" "$GEOJSON_FILE_PATH"
+        echo "=====> Conversion in $FGB_FILE_PATH completed"
+    fi
 fi
 
 if [[ "$FORMAT" == "mbtiles" || "$FORMAT" == "pmtiles" ]]; then

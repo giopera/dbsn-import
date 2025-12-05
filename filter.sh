@@ -15,9 +15,6 @@ fi
 # The list of available layers can be obtained by running ogrinfo on the gdb folder for any province
 # Examples of usage:
 # ./filter.sh buildings edifc
-# ./filter.sh buildings comune
-# ./filter.sh buildings provin
-# ./filter.sh buildings region
 # ./filter.sh townhalls edifc "edifc_uso = '0201'"
 # ./filter.sh police_buildings edifc "edifc_uso = '0306'"
 # ./filter.sh hospital_buildings edifc "edifc_uso = '030102'"
