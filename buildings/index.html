@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>DBSN buildings</title>
+    <meta property="og:description" content="DBSN buildings" />
+    <meta charset='utf-8'>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel='stylesheet' href='https://unpkg.com/maplibre-gl@5.7.1/dist/maplibre-gl.css' />
+    <script src='https://unpkg.com/maplibre-gl@5.7.1/dist/maplibre-gl.js'></script>
+    <script src="https://unpkg.com/pmtiles@4.3.0/dist/pmtiles.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body,
+        #map {
+            height: 100%;
+        }
+
+        .maplibregl-popup {
+            max-width: 400px;
+            font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+    <script>
+        // https://docs.protomaps.com/pmtiles/maplibre
+        let protocol = new pmtiles.Protocol();
+        maplibregl.addProtocol("pmtiles", protocol.tile);
+
+        // https://maplibre.org/maplibre-gl-js/docs/examples/display-a-popup-on-click/
+        const map = new maplibregl.Map({
+            container: 'map', // container id
+            hash: true,
+            maxBounds: [[4, 34], [20, 50]],
+            style: {
+                version: 8,
+                sources: {
+                    'raster-tiles': {
+                        type: 'raster',
+                        tiles: [
+                            'https://tile.openstreetmap.org/{z}/{x}/{y}.png'
+                        ],
+                        tileSize: 256,
+                        attribution: '© OpenStreetMap contributors'
+                    },
+                    "edifc_no_osm": {
+                        "type": "vector",
+                        "url": "pmtiles://./edifc_no_osm.pmtiles",
+                    },
+                    "edi_min_no_osm": {
+                        "type": "vector",
+                        "url": "pmtiles://./edi_min_no_osm.pmtiles",
+                    }
+                },
+                layers: [
+                    {
+                        id: 'osm-tiles',
+                        type: 'raster',
+                        source: 'raster-tiles',
+                        minzoom: 0,
+                        maxzoom: 19
+                    },
+                    {
+                        "id": "edifc_no_osm",
+                        "type": "line",
+                        "source": "edifc_no_osm",
+                        "source-layer": "edifc_no_osm",
+                        "paint": {
+                            'line-color': 'black',
+                            'line-width': 4   // https://maplibre.org/maplibre-gl-js/docs/examples/style-lines-with-a-data-driven-property/
+                        }
+                    },
+                    {
+                        "id": "edi_min_no_osm",
+                        "type": "line",
+                        "source": "edi_min_no_osm",
+                        "source-layer": "edi_min_no_osm",
+                        "paint": {
+                            'line-color': 'blue',
+                            'line-width': 4   // https://maplibre.org/maplibre-gl-js/docs/examples/style-lines-with-a-data-driven-property/
+                        }
+                    },
+                ]
+            },
+            center: [12.99, 42.11], // starting position [lng, lat]
+            zoom: 6, // starting zoom
+        });
+        map.on('load', () => {
+            const onClick = (e) => {
+                /*let coordinates = e.features[0].geometry.coordinates;
+                while(Array.isArray(coordinates[0]))
+                    coordinates = coordinates[0];
+                coordinates = coordinates.slice()
+
+                // Ensure that if the map is zoomed out such that multiple
+                // copies of the feature are visible, the popup appears
+                // over the copy being pointed to.
+                while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                    coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+                }*/
+                const coordinates = e.lngLat;
+
+                const description = '<table><thead><tr><th>Key</th><th>Value</th></tr></thead><tbody>' + Object.keys(
+                    e.features[0].properties
+                ).map(
+                    key => `<tr><td>${key}</td><td>${e.features[0].properties[key]}</td></tr>`
+                ) + '</tbody></table>';
+
+                console.debug("Opening popup", { feature: e.features[0], coordinates, lngLat: e.lngLat });
+                new maplibregl.Popup()
+                    .setLngLat(coordinates)
+                    .setHTML(description)
+                    .addTo(map);
+            };
+
+            // When a click event occurs on a feature in the places layer, open a popup at the
+            // location of the feature, with description HTML from its properties.
+            map.on('click', 'edifc_no_osm', onClick);
+            map.on('click', 'edi_min_no_osm', onClick);
+
+            // Change the cursor to a pointer when the mouse is over the places layer.
+            map.on('mouseenter', 'edifc_no_osm', () => { map.getCanvas().style.cursor = 'pointer'; });
+            map.on('mouseenter', 'edi_min_no_osm', () => { map.getCanvas().style.cursor = 'pointer'; });
+
+            // Change it back to a pointer when it leaves.
+            map.on('mouseleave', 'edifc_no_osm', () => { map.getCanvas().style.cursor = ''; });
+            map.on('mouseleave', 'edi_min_no_osm', () => { map.getCanvas().style.cursor = ''; });
+        });
+    </script>
+</body>
+
+</html>
