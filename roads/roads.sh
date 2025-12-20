@@ -8,4 +8,6 @@ cd $(dirname "$0")/..
 ./filter.sh el_vms_no_osm el_vms "meta_ist != '03'"
 
 ./merge.sh tr_str_no_osm pmtiles
+./merge.sh tr_str_no_osm fgb
 ./merge.sh el_vms_no_osm pmtiles
+./merge.sh el_vms_no_osm fgb
