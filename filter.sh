@@ -30,32 +30,33 @@ AREA_NAME="$4"
 
 ZIP_DIR_PATH="$(dirname "$0")/zip"
 UNZIPPED_DIR_PATH="$(dirname "$0")/unzipped"
-TEMP_DIR_PATH="$(dirname "$0")/data/$OUT_NAME"
-mkdir -p "$TEMP_DIR_PATH"
+OUT_DIR_PATH="$(dirname "$0")/data/$OUT_NAME/dbsn"
+
+mkdir -p "$OUT_DIR_PATH"
 mkdir -p "$UNZIPPED_DIR_PATH"
 
-while IFS=$'\t' read -r region province file_name wmit_url igm_url igm_date latest ; do
-    if [[ "$file_name" == "File" || "$latest" != "yes" ]]; then
+while IFS=$'\t' read -r region province zip_file_name wmit_url igm_url igm_date latest ; do
+    if [[ "$zip_file_name" == "File" || "$latest" != "yes" ]]; then
         # Skip header line and old files
         #echo "===> $region/$province/$igm_date: SKIPPED"
         continue
     fi
     
     # ${var,,} makes the value lowercase, used for case insensitive comparison
-    if [[ -n "$AREA_NAME" && "${province,,}" != "${AREA_NAME,,}" && "${region,,}" != "${AREA_NAME,,}" && "${file_name:0:2}" != "${AREA_NAME^^}" ]]; then
+    if [[ -n "$AREA_NAME" && "${province,,}" != "${AREA_NAME,,}" && "${region,,}" != "${AREA_NAME,,}" && "${zip_file_name:0:2}" != "${AREA_NAME^^}" ]]; then
         #echo "===> $region/$province/$igm_date: SKIPPED"
         continue
     fi
 
-    file_name_no_extension="${file_name%.zip}"
-    province_file_path="$TEMP_DIR_PATH/$file_name_no_extension.$OUT_EXTENSION"
+    zip_file_name_no_extension="${zip_file_name%.zip}"
+    province_file_path="$OUT_DIR_PATH/$zip_file_name_no_extension.$OUT_EXTENSION"
     if [ -f "$province_file_path" ]; then
         echo "===> $region/$province/$igm_date: Already extracted and filtered in '$province_file_path'"
         continue
     fi
     
-    province_zip_path="$ZIP_DIR_PATH/$file_name"
-    unzipped_dir_path="$UNZIPPED_DIR_PATH/$file_name"
+    province_zip_path="$ZIP_DIR_PATH/$zip_file_name"
+    unzipped_dir_path="$UNZIPPED_DIR_PATH/$zip_file_name"
     if [ -e "$unzipped_dir_path" ]; then
         echo "===> $region/$province/$igm_date: Already extracted in '$unzipped_dir_path'"
     else
