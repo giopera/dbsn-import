@@ -34,17 +34,17 @@ mkdir -p "$ZIP_DIR_PATH"
 while IFS=$'\t' read -r region province file_name wmit_url igm_url igm_date latest ; do
     if [[ "$file_name" == "File" || (-z "$DATE" && $latest != "yes") || ( "$DATE" && "$DATE" != $igm_date) ]]; then
         # Skip header line and old files
-        echo "===> $region/$province/$igm_date: SKIPPED"
+        # echo "===> $region/$province/$igm_date: SKIPPED"
         continue
     fi
 
     # ${var,,} makes the value lowercase, used for case insensitive comparison
     if [[ -n "$AREA_NAME" && "${province,,}" != "${AREA_NAME,,}" && "${region,,}" != "${AREA_NAME,,}" && "${file_name:0:2}" != "${AREA_NAME^^}" ]]; then
-        echo "===> $region/$province/$igm_date: SKIPPED"
+        # echo "===> $region/$province/$igm_date: SKIPPED"
         continue
     fi
 
-    file_path="$ZIP_DIR_PATH/$file_name"
+    file_path="$ZIP_DIR_PATH/${file_name:0:2}_$igm_date.zip"
     if [[ -f "$file_path" ]]; then
         echo "===> $region/$province/$igm_date: Already downloaded in '$file_path'"
     else
