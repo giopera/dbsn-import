@@ -85,27 +85,27 @@ while IFS=$'\t' read -r region province zip_file_name wmit_url igm_url igm_date 
         #echo "===> $region/$province/$igm_date: SKIPPED"
         continue
     fi
-    file_name="${file_name:0:2}_$igm_date.zip"
-    file_path="$ZIP_DIR_PATH/${file_name}"
+    zip_file_name="${zip_file_name:0:2}_$igm_date.zip"
+    zip_file_path="$ZIP_DIR_PATH/${zip_file_name}"
 
 
-    if [[ $DOWNLOAD_IF_MISSING == true && ! -f $file_path ]]; then
+    if [[ $DOWNLOAD_IF_MISSING == true && ! -f $zip_file_path ]]; then
         sh download.sh $AREA_NAME
     
-    elif [[ ! -f $file_path ]]; then
+    elif [[ ! -f $zip_file_path ]]; then
         echo "===> Source file not found"
         exit 1
     fi
 
-    file_name_no_extension="${file_name%.zip}"
-    province_file_path="$TEMP_DIR_PATH/$file_name_no_extension.$OUT_EXTENSION"
+    original_file_name_no_extension="${zip_file_name%.zip}"
+    province_file_path="$TEMP_DIR_PATH/$original_file_name_no_extension.$OUT_EXTENSION"
     if [ -f "$province_file_path" && ! OVERWRITE ]; then
         echo "===> $region/$province/$igm_date: Already extracted and filtered in '$province_file_path'"
         continue
     fi
     
-    province_zip_path="$ZIP_DIR_PATH/$file_name"
-    unzipped_dir_path="$UNZIPPED_DIR_PATH/$file_name_no_extension"
+    province_zip_path="$ZIP_DIR_PATH/$zip_file_name"
+    unzipped_dir_path="$UNZIPPED_DIR_PATH/$original_file_name_no_extension"
     if [ -e "$unzipped_dir_path" ]; then
         echo "===> $region/$province/$igm_date: Already extracted in '$unzipped_dir_path'"
     else
