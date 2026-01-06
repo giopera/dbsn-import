@@ -7,14 +7,26 @@ Scripts and notebooks for analysis and preparation of IGM DBSN data for integrat
 
 Main scripts:
 1. [download.sh](./download.sh): Download the files (one zip for each province)
-   * `./download.sh [<area_name>]`
+   * `./download.sh -wiah -d <date> [<area_name>]`
    * `<area_name>` can be the name of a region or a province
+   * `-w` prefer wikimedia or externally hosted files
+   * `-i` prefer IGM files
+   * `-a` download all files, overrides <area_name>
+   * `-d <date>` download only specific files on specific date in format YYYY-MM-DD
+   * `-h` shows a little help
 2. [filter.sh](./filter.sh): Filter all the elements of a certain type (one GeoJSON for each province)
-   * `./filter.sh <out_name> <gdal_layer> [<gdal_filter>] [<area_name>]`
+   * `./filter.sh -guaoh -e <extension> -d <driver> <out_name> <gdal_layer> [<gdal_filter>] [<area_name>]`
    * `<out_name>` is an arbitrary name used for the output
    * `<gdal_layer>` must be one of the layers in https://wiki.openstreetmap.org/wiki/Italy/DBSN/Mapping
    * `<gdal_filter>` should have the format `"parameter = 'value'"`, you can use `""` for no filter
    * `<area_name>` can be the name of a region or a province
+   * `-g` tell program to call [download.sh](./download.sh) to get missing files 
+   * `-u` tell ogr2ogr to update existsing output dataset
+   * `-a` tell ogr2ogr to append to existing file and update output dataset
+   * `-o` tell ogr2ogr to overwrite existing output dataset
+   * `-e <extension>` tell the output extension to the program 
+   * `-d <driver>` tell the program which driver to use 
+   * `-h` shows a little help
 3. [merge.sh](./merge.sh): Merge the filtered files (one fgb / geojson / parquet / mbtiles / pmtiles file)
    * `./merge.sh <out_name> [<format>]`
    * `<out_name>` should be the same used previously for filter.sh
