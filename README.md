@@ -27,7 +27,12 @@ Main scripts:
    * `-e <extension>` tell the output extension to the program 
    * `-d <driver>` tell the program which driver to use 
    * `-h` shows a little help
-3. [merge.sh](./merge.sh): Merge the filtered files (one fgb / geojson / parquet / mbtiles / pmtiles file)
+3. [compare.sh](./compare.sh): Extract all the elements of a certain type that have no intersection with any element of the corresponding type on OSM (one file for each province)
+   * `./compare.sh <out_name> <osm_filter> [<area_name>]`
+   * `<out_name>` should be the same used previously for filter.sh
+   * `<osm_filter>` should have the format `key=*` or `key=value`
+   * `<area_name>` can be the name of a region or a province
+4. [merge.sh](./merge.sh): Merge the filtered files (one fgb / geojson / parquet / mbtiles / pmtiles file)
    * `./merge.sh <out_name> [<format>]`
    * `<out_name>` should be the same used previously for filter.sh
    * `<format>` can be `geojson`, `fgb`, `parquet`, `mbtiles`, `pmtiles`

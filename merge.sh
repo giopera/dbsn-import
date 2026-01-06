@@ -9,9 +9,9 @@ fi
 OUT_NAME="$1"
 FORMAT="${2:-geojson}" # Default format is geojson
 
-TEMP_DIR_PATH="./data/$OUT_NAME"
-GEOJSON_FILE_PATH="./data/$OUT_NAME.geojson"
-FGB_FILE_PATH="./data/$OUT_NAME.fgb"
+TEMP_DIR_PATH="./data/$OUT_NAME/dbsn"
+GEOJSON_FILE_PATH="./data/$OUT_NAME/$OUT_NAME.geojson"
+FGB_FILE_PATH="./data/$OUT_NAME/$OUT_NAME.fgb"
 
 mkdir -p "./data"
 
