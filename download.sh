@@ -44,9 +44,9 @@ while IFS=$'\t' read -r region province zip_file_name wmit_url igm_url igm_date 
         continue
     fi
 
-    file_path="$ZIP_DIR_PATH/${file_name:0:2}_$igm_date.zip"
-    if [[ -f "$file_path" ]]; then
-        echo "===> $region/$province/$igm_date: ZIP Already downloaded in '$file_path'"
+    zip_file_path="$ZIP_DIR_PATH/${zip_file_name:0:2}_$igm_date.zip"
+    if [[ -f "$zip_file_path" ]]; then
+        echo "===> $region/$province/$igm_date: ZIP Already downloaded in '$zip_file_path'"
     else
         if [[ $PREF_WM == 1 ]]; then
             [[ "$wmit_url" == "TODO" ]] && echo "Wikimedia download not available" || url="$wmit_url"
